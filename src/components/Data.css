@@ -1,0 +1,18 @@
+.imageStart {
+    background-image: url(../icons/start.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.imageTarget {
+    background-image: url(../icons/target.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.wall {
+    background-color: #34495e;
+    border-color: #34495e !important;
+}
