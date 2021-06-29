@@ -1,16 +1,14 @@
-import { Navbar, Button, Dropdown, Table } from "react-bootstrap";
+import { Navbar, Button, Dropdown } from "react-bootstrap";
 import TableRow from "./components/TableRow";
 import useWindowDimensions from "./hooks/useWindowDimensions";
 import "./App.css";
 
 function App() {
     const { height, width } = useWindowDimensions();
-    console.log(height, width);
 
-    const onMouseEnterHandler = (event) => {
-        console.log(event);
-    };
-
+    let numCols = Math.floor(width / 23) + 1;
+    let numRows = Math.floor(height / 23) - 4;
+    console.log(numRows, numCols);
     return (
         <>
             <div
@@ -20,90 +18,105 @@ function App() {
                     color: "white",
                     fontSize: "x-large",
                     fontWeight: "bolder",
+                    textAlign: "center",
                 }}>
                 Pathfinding Visualizer
             </div>
-            <Navbar style={{ backgroundColor: "#34495e" }} expand="sm">
+            <Navbar style={{ backgroundColor: "#34495e" }} expand="md">
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
                 <Navbar.Collapse id="basic-navbar-nav">
                     <div className="container-fluid d-flex justify-content-center">
-                        <Button id="clearBoard" className="navButton">
-                            Clear Board
-                        </Button>
-                        <Dropdown className="mr-3">
-                            <Dropdown.Toggle
-                                variant="disabled"
-                                id="dropdown-basic"
-                                style={{ color: "white" }}>
-                                Dropdown1
-                            </Dropdown.Toggle>
+                        <div className="col-md d-flex justify-content-center">
+                            <button
+                                id="clearBoard "
+                                className="btn shadow-none navButton navs">
+                                Clear Board
+                            </button>
+                        </div>
+                        <div className="col-md d-flex justify-content-center">
+                            <Dropdown className="ml-3">
+                                <Dropdown.Toggle
+                                    className="shadow-none navs"
+                                    variant="disabled"
+                                    id="dropdown-basic"
+                                    style={{ color: "white" }}>
+                                    Generate Maze
+                                </Dropdown.Toggle>
 
-                            <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">
-                                    Action
-                                </Dropdown.Item>
-                                <Dropdown.Divider />
-                                <Dropdown.Item href="#/action-2">
-                                    Another action
-                                </Dropdown.Item>
-                                <Dropdown.Divider />
-                                <Dropdown.Item href="#/action-3">
-                                    Something else
-                                </Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                        <Button
-                            className="visualize"
-                            onMouseOver={onMouseEnterHandler}>
-                            Visualize!
-                        </Button>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item href="#/action-1">
+                                        Action
+                                    </Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item href="#/action-2">
+                                        Another action
+                                    </Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item href="#/action-3">
+                                        Something else
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+                        <div className="col-md my-sm-2 d-flex justify-content-center">
+                            <button className="btn visualize shadow-none">
+                                Visualize!
+                            </button>
+                        </div>
+                        <div className="col-md d-flex justify-content-center">
+                            <Dropdown className="ml-3">
+                                <Dropdown.Toggle
+                                    className="shadow-none navs"
+                                    variant="disabled"
+                                    id="dropdown-basic"
+                                    style={{ color: "white" }}>
+                                    Generate Maze
+                                </Dropdown.Toggle>
 
-                        <Dropdown className="ml-3">
-                            <Dropdown.Toggle
-                                variant="disabled"
-                                id="dropdown-basic"
-                                style={{ color: "white" }}>
-                                Dropdown2
-                            </Dropdown.Toggle>
-
-                            <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">
-                                    Action
-                                </Dropdown.Item>
-                                <Dropdown.Divider />
-                                <Dropdown.Item href="#/action-2">
-                                    Another action
-                                </Dropdown.Item>
-                                <Dropdown.Divider />
-                                <Dropdown.Item href="#/action-3">
-                                    Something else
-                                </Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                        <Button id="clearPath" className="navButton">
-                            Clear Path
-                        </Button>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item href="#/action-1">
+                                        Action
+                                    </Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item href="#/action-2">
+                                        Another action
+                                    </Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item href="#/action-3">
+                                        Something else
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+                        <div className="col-md d-flex justify-content-center">
+                            <button
+                                id="clearBoard"
+                                className="btn shadow-none navButton navs">
+                                Clear Path
+                            </button>
+                        </div>
                     </div>
                 </Navbar.Collapse>
             </Navbar>
-            <div className="container-fluid d-flex justify-content-center">
-                <Table bordered variant="transparent">
-                    <thead></thead>
-                    <tbody>
-                        {Array.from({ length: 23 }).map((value, idx) => {
+
+            <table>
+                <thead></thead>
+                <tbody>
+                    <tr>
+                        {Array.from({ length: numRows }).map((value, idx) => {
                             return (
                                 <TableRow
                                     key={idx}
-                                    cols="50"
+                                    cols={numCols}
                                     row={idx}
                                     rowStart={idx === 10 ? true : null}
                                 />
                             );
                         })}
-                    </tbody>
-                </Table>
-            </div>
+                    </tr>
+                </tbody>
+            </table>
         </>
     );
 }

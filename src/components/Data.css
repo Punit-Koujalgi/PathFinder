@@ -3,6 +3,7 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
+    animation: start 1s ease-out;
 }
 
 .imageTarget {
@@ -10,9 +11,32 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
+    animation: start 1s ease-out;
 }
 
 .wall {
     background-color: #34495e;
     border-color: #34495e !important;
+}
+
+td {
+    width: 25px;
+    height: 25px;
+    border: 0.5px solid lightblue;
+}
+
+@keyframes start {
+    0% {
+        transform: scale(0.2, 0.2);
+    }
+    50% {
+        transform: scale(1.3, 1.3);
+    }
+    100% {
+        transform: scale(1, 1);
+    }
+}
+
+.startBeingDragged {
+    transform: scale(0.5, 0.5);
 }

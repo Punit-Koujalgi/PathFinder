@@ -1,9 +1,18 @@
 .navButton {
     background-color: #34495e !important;
     border-color: #34495e !important;
+    color: white !important;
 }
 
 .visualize {
     background-color: #1abc9c !important;
     border-color: #1abc9c !important;
+    color: white !important;
+}
+
+.table {
+    align-content: center;
+}
+.navs:hover {
+    color: #1abc9c !important;
 }
