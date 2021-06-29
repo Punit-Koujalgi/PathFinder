@@ -1,4 +1,4 @@
-.imageStart {
+.start {
     background-image: url(../icons/start.svg);
     background-position: center;
     background-repeat: no-repeat;
@@ -6,7 +6,7 @@
     animation: start 1s ease-out;
 }
 
-.imageTarget {
+.target {
     background-image: url(../icons/target.svg);
     background-position: center;
     background-repeat: no-repeat;
@@ -17,6 +17,22 @@
 .wall {
     background-color: #34495e;
     border-color: #34495e !important;
+}
+
+.startBeingMoved {
+    background-image: url(../icons/start.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    animation: startTargetBeingMoved 1s ease-out forwards;
+}
+
+.targetBeingMoved {
+    background-image: url(../icons/target.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    animation: startTargetBeingMoved 1s ease-out forwards;
 }
 
 td {
@@ -37,6 +53,14 @@ td {
     }
 }
 
-.startBeingDragged {
-    transform: scale(0.5, 0.5);
+@keyframes startTargetBeingMoved {
+    0% {
+        transform: scale(1, 1);
+    }
+    50% {
+        transform: scale(2, 2);
+    }
+    100% {
+        transform: scale(1.5, 1.5);
+    }
 }

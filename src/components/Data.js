@@ -1,134 +1,107 @@
 import "./Data.css";
-import { useState, useRef, useEffect } from "react";
+
+import { useRef } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { boardActions } from "../store/board";
 
 const Data = (props) => {
-    const id = `d-${props.row}-${props.col}`;
+    const id = `d_${props.row}_${props.col}`;
 
-    const tdRef = useRef();
-    //const [isWall, setisWall] = useState(false);
-    const [status, setStatus] = useState(props.initialState);
-    useEffect(() => {
-        setStatus(props.initialState);
-    }, [props.initialState]);
+    const dRef = useRef();
+    const status = useSelector((state) => state.board[id]);
+    //console.log(status);
+    const dispatch = useDispatch();
+
+    const startClass = `${status === "start" ? "start" : ""}`;
+    const targetClass = `${status === "target" ? "target" : ""}`;
+    const unvisitedClass = `${status === "unvisited" ? "unvisited" : ""}`;
+    const wallClass = `${status === "wall" ? "wall" : ""}`;
+    const startBeingMoved = `${
+        status === "startBeingMoved" ? "startBeingMoved" : ""
+    }`;
+    const targetBeingMoved = `${
+        status === "targetBeingMoved" ? "targetBeingMoved" : ""
+    }`;
+    const classes =
+        startClass +
+        targetClass +
+        unvisitedClass +
+        wallClass +
+        startBeingMoved +
+        targetBeingMoved;
+    //console.log(classes);
 
     const onClickHandler = (event) => {
-        //setisWall(true);
-        console.log("click", event.target);
-        if (tdRef.current.className.includes("wall")) {
-            console.log("here");
-            tdRef.current.className = tdRef.current.className.replace(
-                "wall",
-                ""
-            );
-        } else if (status === "unvisited") tdRef.current.className += " wall";
-        //console.log(tdRef);
-    };
-
-    const onMouseEnterHandler = (event) => {
-        // event.preventDefaultBehaviour
-        console.log("enter", event.buttons);
-        if (
-            event.buttons === 1 &&
-            sessionStorage.getItem("startedDraggingstart") === "true"
-        ) {
-            tdRef.current.className = "imageStart startBeingDragged";
-        } else if (
-            event.buttons === 1 &&
-            sessionStorage.getItem("startedDraggingend") === "true"
-        ) {
-            tdRef.current.className = "imageTarget startBeingDragged";
-        } else if (
-            event.buttons === 1 &&
-            !tdRef.current.className.includes("wall") &&
-            status === "unvisited"
-        ) {
-            tdRef.current.className += " wall";
-        }
-    };
-
-    const onMouseLeaveHandler = (event) => {
-        console.log("leave", event.buttons);
-        if (
-            event.buttons === 1 &&
-            sessionStorage.getItem("startedDraggingstart") === "true"
-        ) {
-            if (tdRef.current.className.includes("startBeingDragged")) {
-                tdRef.current.className = tdRef.current.className.replace(
-                    "imageStart startBeingDragged",
-                    "unvisited"
-                );
-            }
-        }
-        if (
-            event.buttons === 1 &&
-            sessionStorage.getItem("startedDraggingend") === "true"
-        ) {
-            if (tdRef.current.className.includes("startBeingDragged")) {
-                tdRef.current.className = tdRef.current.className.replace(
-                    "imageTarget startBeingDragged",
-                    "unvisited"
-                );
-            }
-        }
-    };
-    const onMouseDownHandler = (event) => {
-        event.preventDefault();
-        console.log("down", event.target);
-        if (
-            !tdRef.current.className.includes("wall") &&
-            status === "unvisited"
-        ) {
-            tdRef.current.className += " wall";
-        }
+        console.log("click");
         if (status === "start") {
-            tdRef.current.className = "unvisited";
-            sessionStorage.setItem("startedDraggingstart", "true");
-        }
-        if (status === "target") {
-            tdRef.current.className = "unvisited";
-            sessionStorage.setItem("startedDraggingend", "true");
+            sessionStorage.setItem("placeStart", "true");
+            sessionStorage.setItem("startPrevious", id);
+            dispatch(
+                boardActions.setClass({ id: id, class: "startBeingMoved" })
+            );
+        } else if (
+            status === "unvisited" &&
+            sessionStorage.getItem("placeStart") === "true"
+        ) {
+            sessionStorage.setItem("placeStart", "false");
+            dispatch(boardActions.setClass({ id: id, class: "start" }));
+            dispatch(
+                boardActions.setClass({
+                    id: sessionStorage.getItem("startPrevious"),
+                    class: "unvisited",
+                })
+            );
+        } else if (status === "target") {
+            console.log("here");
+            sessionStorage.setItem("placeTarget", "true");
+            sessionStorage.setItem("targetPrevious", id);
+            dispatch(
+                boardActions.setClass({ id: id, class: "targetBeingMoved" })
+            );
+        } else if (
+            status === "unvisited" &&
+            sessionStorage.getItem("placeTarget") === "true"
+        ) {
+            console.log("here1");
+            sessionStorage.setItem("placeTarget", "false");
+            dispatch(boardActions.setClass({ id: id, class: "target" }));
+            dispatch(
+                boardActions.setClass({
+                    id: sessionStorage.getItem("targetPrevious"),
+                    class: "unvisited",
+                })
+            );
+        } else if (status === "wall") {
+            dispatch(boardActions.setClass({ id: id, class: "unvisited" }));
         }
     };
 
-    const onMouseUpHandler = (event) => {
-        console.log("up", event.target);
-        if (sessionStorage.getItem("startedDraggingstart") === "true") {
-            sessionStorage.setItem("startedDraggingstart", "false");
-            tdRef.current.className = tdRef.current.className.replace(
-                "startBeingDragged",
-                ""
-            );
-            setStatus("start");
-        }
-        if (sessionStorage.getItem("startedDraggingend") === "true") {
-            sessionStorage.setItem("startedDraggingend", "false");
-            tdRef.current.className = tdRef.current.className.replace(
-                "startBeingDragged",
-                ""
-            );
-            setStatus("target");
+    const onMouseDown = (event) => {
+        console.log("down");
+        event.preventDefault();
+        if (
+            status === "unvisited" &&
+            sessionStorage.getItem("placeStart") !== "true" &&
+            sessionStorage.getItem("placeTarget") !== "true"
+        ) {
+            dispatch(boardActions.setClass({ id: id, class: "wall" }));
         }
     };
-
-    const startClass = `${props.initialState === "start" ? "imageStart" : ""}`;
-    const targetClass = `${
-        props.initialState === "target" ? "imageTarget" : ""
-    }`;
-    const unvisitedClass = `${
-        props.initialState === "unvisited" ? "unvisited" : ""
-    }`;
-    const classes = startClass + targetClass + unvisitedClass;
+    const onMouseEnter = (event) => {
+        if (event.buttons === 1 && status === "unvisited") {
+            dispatch(boardActions.setClass({ id: id, class: "wall" }));
+        }
+    };
 
     return (
         <td
             id={id}
             className={classes}
-            onMouseEnter={onMouseEnterHandler}
             onClick={onClickHandler}
-            onMouseDown={onMouseDownHandler}
-            onMouseLeave={onMouseLeaveHandler}
-            onMouseUp={onMouseUpHandler}
-            ref={tdRef}></td>
+            onMouseEnter={onMouseEnter}
+            onMouseDown={onMouseDown}
+            ref={dRef}></td>
     );
 };
 

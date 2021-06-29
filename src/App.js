@@ -1,6 +1,8 @@
-import { Navbar, Button, Dropdown } from "react-bootstrap";
+import { Navbar, Dropdown } from "react-bootstrap";
 import TableRow from "./components/TableRow";
 import useWindowDimensions from "./hooks/useWindowDimensions";
+// import { useDispatch } from "react-redux";
+// import { boardActions } from "./store/board";
 import "./App.css";
 
 function App() {
@@ -8,7 +10,7 @@ function App() {
 
     let numCols = Math.floor(width / 23) + 1;
     let numRows = Math.floor(height / 23) - 4;
-    console.log(numRows, numCols);
+    //console.log(numRows, numCols);
     return (
         <>
             <div
@@ -101,20 +103,17 @@ function App() {
             </Navbar>
 
             <table>
-                <thead></thead>
                 <tbody>
-                    <tr>
-                        {Array.from({ length: numRows }).map((value, idx) => {
-                            return (
-                                <TableRow
-                                    key={idx}
-                                    cols={numCols}
-                                    row={idx}
-                                    rowStart={idx === 10 ? true : null}
-                                />
-                            );
-                        })}
-                    </tr>
+                    {Array.from({ length: numRows }).map((value, idx) => {
+                        return (
+                            <TableRow
+                                key={idx}
+                                cols={numCols}
+                                row={idx}
+                                rowStart={idx === 10 ? true : null}
+                            />
+                        );
+                    })}
                 </tbody>
             </table>
         </>
