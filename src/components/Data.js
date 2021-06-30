@@ -8,6 +8,7 @@ const Data = (props) => {
     const id = `d_${props.row}_${props.col}`;
 
     const status = useSelector((state) => state.board[id]);
+    const visualizeOn = useSelector((state) => state.animate.visualizeOn);
     //console.log(status);
     const dispatch = useDispatch();
 
@@ -53,6 +54,7 @@ const Data = (props) => {
     //console.log(classes);
 
     const onClickHandler = (event) => {
+        if (visualizeOn) return;
         console.log("click");
         if (status === "start") {
             sessionStorage.setItem("placeStart", "true");
@@ -73,7 +75,6 @@ const Data = (props) => {
                 })
             );
         } else if (status === "target") {
-            console.log("here");
             sessionStorage.setItem("placeTarget", "true");
             sessionStorage.setItem("targetPrevious", id);
             dispatch(
@@ -83,7 +84,6 @@ const Data = (props) => {
             status === "unvisited" &&
             sessionStorage.getItem("placeTarget") === "true"
         ) {
-            console.log("here1");
             sessionStorage.setItem("placeTarget", "false");
             dispatch(boardActions.setClass({ id: id, class: "target" }));
             dispatch(
@@ -98,6 +98,7 @@ const Data = (props) => {
     };
 
     const onMouseDown = (event) => {
+        if (visualizeOn) return;
         console.log("down");
         event.preventDefault();
         if (
@@ -109,6 +110,7 @@ const Data = (props) => {
         }
     };
     const onMouseEnter = (event) => {
+        if (visualizeOn) return;
         if (event.buttons === 1 && status === "unvisited") {
             dispatch(boardActions.setClass({ id: id, class: "wall" }));
         }

@@ -12,14 +12,9 @@ const prepareData = (state) => {
     return data;
 };
 
-let nodesVisited = [];
-let shortestPath = [];
-let prevNodes = {};
-let queue = [];
-let reachedEnd = false;
 const dr = [-1, +1, 0, 0];
 const dc = [0, 0, +1, -1];
-const getNeighbours = (s, data) => {
+const getNeighbours = (s, data, queue, prevNodes, nodesVisited) => {
     const [d, row, col] = s.split("_");
     for (let i = 0; i < 4; i++) {
         const rr = +row + dr[i];
@@ -40,7 +35,8 @@ const getNeighbours = (s, data) => {
     }
 };
 
-const getShortestPath = (target, prevNodes) => {
+const getShortestPath = (target, prevNodes, reachedEnd) => {
+    let shortestPath = [];
     if (!reachedEnd) {
         shortestPath = [];
         return;
@@ -51,10 +47,15 @@ const getShortestPath = (target, prevNodes) => {
         shortestPath.push(node);
         node = prevNodes[node];
     }
-    shortestPath.reverse();
+    return shortestPath.reverse();
 };
 
 const bfs = (state) => {
+    let shortestPath = [];
+    let nodesVisited = [];
+    let prevNodes = {};
+    let queue = [];
+    let reachedEnd = false;
     let data = prepareData(state);
     let s = data.start;
     queue.push(s);
@@ -67,9 +68,9 @@ const bfs = (state) => {
             reachedEnd = true;
             break;
         }
-        getNeighbours(s, data);
+        getNeighbours(s, data, queue, prevNodes, nodesVisited);
     }
-    getShortestPath(data.target, prevNodes);
+    shortestPath = getShortestPath(data.target, prevNodes, reachedEnd);
 
     return [reachedEnd, nodesVisited, shortestPath];
 };

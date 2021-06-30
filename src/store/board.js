@@ -12,11 +12,7 @@ const boardSlice = createSlice({
     initialState,
     reducers: {
         setClass(state, action) {
-            if (action.payload.class === "targetBeingMoved")
-                console.log("okay");
             state[action.payload.id] = action.payload.class;
-            if (action.payload.class === "targetBeingMoved")
-                console.log(state[action.payload.id]);
         },
     },
 });
