@@ -7,8 +7,8 @@ const TableRow = (props) => {
 
     let tds = Array.from({ length: +props.cols }).map((value, idx) => {
         //console.log(startCol, targetCol);
-        let startCol = Math.floor(+props.cols / 2) - 4;
-        let targetCol = Math.floor(+props.cols / 2) + 4;
+        let startCol = Math.floor(+props.cols / 2) - 6;
+        let targetCol = Math.floor(+props.cols / 2) + 6;
         if (props.rowStart && idx === startCol) {
             dispatch(
                 boardActions.setClass({

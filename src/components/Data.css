@@ -34,11 +34,75 @@
     background-size: contain;
     animation: startTargetBeingMoved 1s ease-out forwards;
 }
+.visitedNode {
+    background-color: #eff235;
+    animation-name: visitedNodeAnimation;
+    animation-duration: 2s;
+    animation-timing-function: ease-out;
+    animation-delay: 0s;
+    animation-fill-mode: both;
+}
+
+.unvisited {
+    background-color: white;
+}
+.shortestPath {
+    background-color: rgb(245, 242, 54);
+    border-color: rgb(245, 242, 54);
+    animation-name: shortestPathNode;
+    animation-duration: 1.5s;
+    animation-timing-function: linear;
+    animation-delay: 0.02s;
+    animation-fill-mode: forwards;
+}
 
 td {
     width: 25px;
     height: 25px;
     border: 0.5px solid lightblue;
+}
+
+@keyframes visitedNodeAnimation {
+    0% {
+        transform: scale(0.3);
+        background-color: rgba(0, 0, 66, 0.75);
+        border-radius: 100%;
+    }
+
+    50% {
+        background-color: rgba(17, 104, 217, 0.75);
+    }
+
+    75% {
+        transform: scale(1.2);
+        background-color: rgba(0, 217, 159, 0.75);
+    }
+
+    100% {
+        transform: scale(1);
+        background-color: rgba(0, 190, 218, 0.75);
+    }
+}
+
+@keyframes shortestPathNode {
+    0% {
+        transform: scale(0.6);
+        background-color: rgb(255, 254, 106);
+        background-image: url(../icons/start.svg);
+    }
+    25% {
+        background-image: none;
+    }
+
+    50% {
+        transform: scale(1.2);
+        background-color: rgb(255, 254, 106);
+    }
+
+    100% {
+        transform: scale(1);
+        background-color: rgb(255, 254, 106);
+    }
 }
 
 @keyframes start {

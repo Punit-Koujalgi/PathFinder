@@ -1,6 +1,5 @@
 import "./Data.css";
 
-import { useRef } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { boardActions } from "../store/board";
@@ -8,7 +7,6 @@ import { boardActions } from "../store/board";
 const Data = (props) => {
     const id = `d_${props.row}_${props.col}`;
 
-    const dRef = useRef();
     const status = useSelector((state) => state.board[id]);
     //console.log(status);
     const dispatch = useDispatch();
@@ -23,13 +21,35 @@ const Data = (props) => {
     const targetBeingMoved = `${
         status === "targetBeingMoved" ? "targetBeingMoved" : ""
     }`;
+    const visitedNodeClass = `${status === "visitedNode" ? "visitedNode" : ""}`;
+    const startVisitedNodeClass = `${
+        status === "start visitedNode" ? "start visitedNode" : ""
+    }`;
+    const targetVisitedNodeClass = `${
+        status === "target visitedNode" ? "target visitedNode" : ""
+    }`;
+    const shortestPathClass = `${
+        status === "shortestPath" ? "shortestPath" : ""
+    }`;
+    const startShortestPathClass = `${
+        status === "start shortestPath" ? "start shortestPath" : ""
+    }`;
+    const targetShortestpathClass = `${
+        status === "target shortestPath" ? "target shortestPath" : ""
+    }`;
     const classes =
         startClass +
         targetClass +
         unvisitedClass +
         wallClass +
         startBeingMoved +
-        targetBeingMoved;
+        targetBeingMoved +
+        visitedNodeClass +
+        startVisitedNodeClass +
+        targetVisitedNodeClass +
+        startShortestPathClass +
+        targetShortestpathClass +
+        shortestPathClass;
     //console.log(classes);
 
     const onClickHandler = (event) => {
@@ -100,8 +120,7 @@ const Data = (props) => {
             className={classes}
             onClick={onClickHandler}
             onMouseEnter={onMouseEnter}
-            onMouseDown={onMouseDown}
-            ref={dRef}></td>
+            onMouseDown={onMouseDown}></td>
     );
 };
 

@@ -21,9 +21,32 @@ const boardSlice = createSlice({
     },
 });
 
+const initState = {
+    visualizeOn: false,
+    rows: 30,
+    cols: 70,
+};
+
+const animationSlice = createSlice({
+    name: "animate",
+    initialState: initState,
+    reducers: {
+        setRows(state, action) {
+            state.rows = action.payload;
+        },
+        setCols(state, action) {
+            state.cols = action.payload;
+        },
+        setVisualize(state, action) {
+            state.visualizeOn = action.payload;
+        },
+    },
+});
+
 const store = configureStore({
-    reducer: { board: boardSlice.reducer },
+    reducer: { board: boardSlice.reducer, animate: animationSlice.reducer },
 });
 
 export const boardActions = boardSlice.actions;
+export const animationActions = animationSlice.actions;
 export default store;
