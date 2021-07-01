@@ -15,13 +15,13 @@ const prepareData = (state) => {
 const staircaseMaze = (state) => {
     let data = prepareData(state);
     let nodesToWalls = [];
-    let currentX = math.floor(Math.random() * data.rows);
-    let currentY = 0;
+    let currentX = Math.floor(Math.random() * data.rows);
+    let currentY = 1;
     let directions = ["up", "down"];
     let direction = directions[Math.floor(Math.random() * 2)];
-    while (currentY < data.cols) {
+    while (currentY < data.cols - 1) {
         if (direction === "up") {
-            while (currentX >= 1 && currentY < data.cols) {
+            while (currentX >= 2 && currentY < data.cols - 1) {
                 let id = `d_${currentX}_${currentY}`;
                 nodesToWalls.push(id);
                 currentX--;
@@ -29,7 +29,7 @@ const staircaseMaze = (state) => {
             }
             direction = "down";
         } else {
-            while (currentX <= data.rows - 2 && currentY < data.cols) {
+            while (currentX <= data.rows - 3 && currentY < data.cols - 1) {
                 let id = `d_${currentX}_${currentY}`;
                 nodesToWalls.push(id);
                 currentX++;
@@ -40,3 +40,4 @@ const staircaseMaze = (state) => {
     }
     return nodesToWalls;
 };
+export default staircaseMaze;

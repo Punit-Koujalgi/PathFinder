@@ -85,7 +85,7 @@ const getMinimum = (pq) => {
     return minKey;
 };
 
-const astar = (state) => {
+const bestFirstSearch = (state) => {
     const [data, gScore, heuristic, fScore, visited] = preProcessData(state);
     let prevNodes = {};
     let pq = {};
@@ -105,7 +105,7 @@ const astar = (state) => {
             if (gScore[neigh] === null || g_temp < gScore[neigh]) {
                 prevNodes[neigh] = m;
                 gScore[neigh] = g_temp;
-                fScore[neigh] = gScore[neigh] + heuristic[neigh];
+                fScore[neigh] = heuristic[neigh];
                 //console.log(Object.keys(pq));
                 if (Object.keys(pq).includes(neigh) === false) {
                     pq[neigh] = fScore[neigh];
@@ -120,4 +120,4 @@ const astar = (state) => {
     let shortestPath = getShortestPath(data.target, prevNodes, reachedEnd);
     return [reachedEnd, nodesVisited, shortestPath];
 };
-export default astar;
+export default bestFirstSearch;

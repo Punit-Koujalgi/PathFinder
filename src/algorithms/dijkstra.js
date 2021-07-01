@@ -83,7 +83,7 @@ const dijkstra = (state) => {
                 pq[neigh] = newDist;
             }
         }
-        if (m == data.target) {
+        if (m === data.target) {
             reachedEnd = true;
             break;
         }

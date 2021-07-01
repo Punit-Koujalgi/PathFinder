@@ -1,9 +1,13 @@
 import { Navbar } from "react-bootstrap";
 import "./visualize.css";
 import bfs from "../algorithms/bfs";
+import dfs from "../algorithms/dfs";
 import dijkstra from "../algorithms/dijkstra";
 import astar from "../algorithms/astar";
+import bestFirstSearch from "../algorithms/bestFirstSearch";
 import recursiveDivisionMaze from "../mazes/recursiveDivisionMaze";
+import staircaseMaze from "../mazes/staircaseMaze";
+import RandomMaze from "../mazes/randomMaze";
 import { animationActions, boardActions } from "../store/board";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -35,6 +39,22 @@ const animateShortestPathNodes = (shortestPath, dispatch) => {
         }, 50 * i);
     }
 };
+
+function animateWallsMaze(index, nodesToWalls, dispatch) {
+    setTimeout(() => {
+        if (index === nodesToWalls.length) {
+            return;
+        }
+        dispatch(
+            boardActions.setClass({
+                id: nodesToWalls[index],
+                class: "wall",
+            })
+        );
+        animateWallsMaze(index + 1, nodesToWalls, dispatch);
+    }, 5);
+}
+
 let reachedEnd, nodesVisited, shortestPath;
 const Visualize = () => {
     const state = useSelector((state) => state);
@@ -51,6 +71,12 @@ const Visualize = () => {
             console.log(nodesVisited, shortestPath);
         } else if (algoSelected === "A*") {
             [reachedEnd, nodesVisited, shortestPath] = astar(state);
+            console.log(nodesVisited, shortestPath);
+        } else if (algoSelected === "DFS") {
+            [reachedEnd, nodesVisited, shortestPath] = dfs(state);
+            console.log(nodesVisited, shortestPath);
+        } else if (algoSelected === "BestFS") {
+            [reachedEnd, nodesVisited, shortestPath] = bestFirstSearch(state);
             console.log(nodesVisited, shortestPath);
         } else {
             document.getElementById("visualize").innerText =
@@ -152,24 +178,28 @@ const Visualize = () => {
         document.getElementById("visualize").innerHTML = "Visualize A*";
     };
 
+    const onGreedy = () => {
+        document.getElementById("visualize").innerHTML = "Visualize BestFS";
+    };
+    const onDFS = () => {
+        document.getElementById("visualize").innerHTML = "Visualize DFS";
+    };
+
     const onRecursiveDivision = () => {
         const nodesToWalls = recursiveDivisionMaze(state);
-        //console.log(nodesToWalls);
-        function timeout(index) {
-            setTimeout(() => {
-                if (index === nodesToWalls.length) {
-                    return;
-                }
-                dispatch(
-                    boardActions.setClass({
-                        id: nodesToWalls[index],
-                        class: "wall",
-                    })
-                );
-                timeout(index + 1);
-            }, 5);
-        }
-        timeout(0);
+        console.log(nodesToWalls);
+        animateWallsMaze(0, nodesToWalls, dispatch);
+    };
+
+    const onStaircase = () => {
+        const nodesToWalls = staircaseMaze(state);
+        animateWallsMaze(0, nodesToWalls, dispatch);
+    };
+
+    const onRandomMaze = () => {
+        const nodesToWalls = RandomMaze(state);
+        console.log(nodesToWalls);
+        animateWallsMaze(0, nodesToWalls, dispatch);
     };
 
     return (
@@ -203,8 +233,14 @@ const Visualize = () => {
                                     Breadth First Search
                                 </li>
                                 <div className="dropdown-divider"></div>
-                                <li className="dropdown-item">
-                                    Depth First Search
+                                <li className="dropdown-item" onClick={onAstar}>
+                                    A* Algorithm
+                                </li>
+                                <div className="dropdown-divider"></div>
+                                <li
+                                    className="dropdown-item"
+                                    onClick={onGreedy}>
+                                    Best first Search{" "}
                                 </li>
                                 <div className="dropdown-divider"></div>
                                 <li
@@ -213,8 +249,8 @@ const Visualize = () => {
                                     Dijkstra's Algorithm
                                 </li>
                                 <div className="dropdown-divider"></div>
-                                <li className="dropdown-item" onClick={onAstar}>
-                                    A* algorithm
+                                <li className="dropdown-item" onClick={onDFS}>
+                                    Depth First Search
                                 </li>
                             </ul>
                         </div>
@@ -243,10 +279,16 @@ const Visualize = () => {
                                     Recursive Division
                                 </li>
                                 <div className="dropdown-divider"></div>
-                                <li className="dropdown-item" href="/"></li>
+                                <li
+                                    className="dropdown-item"
+                                    onClick={onStaircase}>
+                                    Stair-case Maze
+                                </li>
                                 <div className="dropdown-divider"></div>
-                                <li className="dropdown-item" href="/">
-                                    Link 3
+                                <li
+                                    className="dropdown-item"
+                                    onClick={onRandomMaze}>
+                                    Random Maze
                                 </li>
                             </ul>
                         </div>
