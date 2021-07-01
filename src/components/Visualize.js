@@ -1,5 +1,9 @@
-import { Navbar, Dropdown } from "react-bootstrap";
+import { Navbar } from "react-bootstrap";
+import "./visualize.css";
 import bfs from "../algorithms/bfs";
+import dijkstra from "../algorithms/dijkstra";
+import astar from "../algorithms/astar";
+import recursiveDivisionMaze from "../mazes/recursiveDivisionMaze";
 import { animationActions, boardActions } from "../store/board";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -15,34 +19,17 @@ const animateShortestPathNodes = (shortestPath, dispatch) => {
                 .className.replace("disabled", "");
 
             const node = shortestPath[i];
-            //console.log(node, "=>", document.getElementById(node).className);
             if (
                 document.getElementById(node).className === "start visitedNode"
             ) {
-                // dispatch(
-                //     boardActions.setClass({
-                //         id: node,
-                //         class: "start shortestPath",
-                //     })
-                // );
                 document.getElementById(node).className = "start shortestPath";
             } else if (
                 document.getElementById(node).className === "target visitedNode"
             ) {
-                // dispatch(
-                //     boardActions.setClass({
-                //         id: node,
-                //         class: "target shortestPath",
-                //     })
-                //);
                 document.getElementById(node).className = "target shortestPath";
             } else if (
                 document.getElementById(node).className === "visitedNode"
             ) {
-                //console.log("here");
-                // dispatch(
-                //     boardActions.setClass({ id: node, class: "shortestPath" })
-                // );
                 document.getElementById(node).className = "shortestPath";
             }
         }, 50 * i);
@@ -51,11 +38,25 @@ const animateShortestPathNodes = (shortestPath, dispatch) => {
 let reachedEnd, nodesVisited, shortestPath;
 const Visualize = () => {
     const state = useSelector((state) => state);
-    console.log(state);
+    //console.log(state);
     const dispatch = useDispatch();
 
     const onClickHandler = (event) => {
-        [reachedEnd, nodesVisited, shortestPath] = bfs(state);
+        let algoSelected = event.target.innerText.split(" ")[1];
+        if (algoSelected === "BFS") {
+            [reachedEnd, nodesVisited, shortestPath] = bfs(state);
+            console.log(nodesVisited, shortestPath);
+        } else if (algoSelected === "Dijkstra") {
+            [reachedEnd, nodesVisited, shortestPath] = dijkstra(state);
+            console.log(nodesVisited, shortestPath);
+        } else if (algoSelected === "A*") {
+            [reachedEnd, nodesVisited, shortestPath] = astar(state);
+            console.log(nodesVisited, shortestPath);
+        } else {
+            document.getElementById("visualize").innerText =
+                "Pick an Algorithm!";
+            return;
+        }
         document.getElementById("clearBoard").className += " disabled";
         document.getElementById("algo").className += " disabled";
         document.getElementById("visualize").className += " disabled";
@@ -79,12 +80,6 @@ const Visualize = () => {
                     document.getElementById(node).className =
                         "target visitedNode";
                 } else {
-                    // dispatch(
-                    //     boardActions.setClass({
-                    //         id: node,
-                    //         class: "visitedNode",
-                    //     })
-                    // );
                     document.getElementById(node).className = "visitedNode";
                 }
             }, 20 * i);
@@ -92,69 +87,20 @@ const Visualize = () => {
     };
 
     const onClearPath = () => {
-        //console.log(nodesVisited);
-        // let nodes = [...Object.entries(state.board)];
-        // for (let [key, value] of nodes) {
-        //     //console.log(key);
-        //     // if (document.getElementById(key).className === "visitedNode")
-        //     if (value === "start shortestPath") {
-        //         dispatch(
-        //             boardActions.setClass({
-        //                 id: key,
-        //                 class: "start",
-        //             })
-        //         );
-        //     } else if (value === "target shortestPath") {
-        //         dispatch(
-        //             boardActions.setClass({
-        //                 id: key,
-        //                 class: "target",
-        //             })
-        //         );
-        //     } else
-        //         dispatch(
-        //             boardActions.setClass({
-        //                 id: key,
-        //                 class: "unvisited",
-        //             })
-        //         );
-        // }
         for (let key of nodesVisited) {
-            //console.log(key);
-            // if (document.getElementById(key).className === "visitedNode")
             if (
                 document.getElementById(key).className === "start shortestPath"
             ) {
                 document.getElementById(key).className = "start";
-                // dispatch(
-                //     boardActions.setClass({
-                //         id: key,
-                //         class: "start",
-                //     })
-                // );
             } else if (
                 document.getElementById(key).className === "target shortestPath"
             ) {
-                console.log("here1111", key);
                 document.getElementById(key).className = "target";
-                // dispatch(
-                //     boardActions.setClass({
-                //         id: key,
-                //         class: "target",
-                //     })
-                // );
             } else if (
                 document.getElementById(key).className === "shortestPath" ||
                 document.getElementById(key).className === "visitedNode"
             ) {
-                console.log("here11", key);
                 document.getElementById(key).className = "unvisited";
-                // dispatch(
-                //     boardActions.setClass({
-                //         id: key,
-                //         class: "unvisited",
-                //     })
-                // );
             }
         }
         document.getElementById("algo").className =
@@ -168,10 +114,9 @@ const Visualize = () => {
         dispatch(animationActions.setVisualize(false));
     };
 
-    const onClearBoard = () => {
+    const onClearBoard = (event) => {
         let wallNodes = [];
         for (let [key, value] of Object.entries(state.board)) {
-            console.log(key);
             if (value === "wall") wallNodes.push(key);
             else if (value === "start" && document.getElementById(key))
                 document.getElementById(key).className = "start";
@@ -195,6 +140,38 @@ const Visualize = () => {
         dispatch(animationActions.setVisualize(false));
     };
 
+    const onBFS = (event) => {
+        document.getElementById("visualize").innerHTML = "Visualize BFS";
+    };
+
+    const ondijkstra = (event) => {
+        document.getElementById("visualize").innerHTML = "Visualize Dijkstra";
+    };
+
+    const onAstar = (event) => {
+        document.getElementById("visualize").innerHTML = "Visualize A*";
+    };
+
+    const onRecursiveDivision = () => {
+        const nodesToWalls = recursiveDivisionMaze(state);
+        //console.log(nodesToWalls);
+        function timeout(index) {
+            setTimeout(() => {
+                if (index === nodesToWalls.length) {
+                    return;
+                }
+                dispatch(
+                    boardActions.setClass({
+                        id: nodesToWalls[index],
+                        class: "wall",
+                    })
+                );
+                timeout(index + 1);
+            }, 5);
+        }
+        timeout(0);
+    };
+
     return (
         <Navbar style={{ backgroundColor: "#34495e" }} expand="md">
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -205,7 +182,10 @@ const Visualize = () => {
                         <button
                             id="clearBoard"
                             className="btn shadow-none navButton navs"
-                            onClick={onClearBoard}>
+                            onClick={onClearBoard}
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="Tooltip on top">
                             Clear Board
                         </button>
                     </div>
@@ -218,19 +198,25 @@ const Visualize = () => {
                                 data-toggle="dropdown">
                                 Algorithms
                             </button>
-                            <div className="dropdown-menu">
-                                <a className="dropdown-item" href="/">
-                                    Link 1
-                                </a>
+                            <ul className="dropdown-menu">
+                                <li className="dropdown-item" onClick={onBFS}>
+                                    Breadth First Search
+                                </li>
                                 <div className="dropdown-divider"></div>
-                                <a className="dropdown-item" href="/">
-                                    Link 2
-                                </a>
+                                <li className="dropdown-item">
+                                    Depth First Search
+                                </li>
                                 <div className="dropdown-divider"></div>
-                                <a className="dropdown-item" href="/">
-                                    Link 3
-                                </a>
-                            </div>
+                                <li
+                                    className="dropdown-item"
+                                    onClick={ondijkstra}>
+                                    Dijkstra's Algorithm
+                                </li>
+                                <div className="dropdown-divider"></div>
+                                <li className="dropdown-item" onClick={onAstar}>
+                                    A* algorithm
+                                </li>
+                            </ul>
                         </div>
                     </div>
                     <div className="col-md my-sm-2 d-flex justify-content-center">
@@ -250,19 +236,19 @@ const Visualize = () => {
                                 data-toggle="dropdown">
                                 Generate maze
                             </button>
-                            <div className="dropdown-menu">
-                                <a className="dropdown-item" href="/">
-                                    Link 1
-                                </a>
+                            <ul className="dropdown-menu">
+                                <li
+                                    className="dropdown-item"
+                                    onClick={onRecursiveDivision}>
+                                    Recursive Division
+                                </li>
                                 <div className="dropdown-divider"></div>
-                                <a className="dropdown-item" href="/">
-                                    Link 2
-                                </a>
+                                <li className="dropdown-item" href="/"></li>
                                 <div className="dropdown-divider"></div>
-                                <a className="dropdown-item" href="/">
+                                <li className="dropdown-item" href="/">
                                     Link 3
-                                </a>
-                            </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                     <div className="col-md d-flex justify-content-center">

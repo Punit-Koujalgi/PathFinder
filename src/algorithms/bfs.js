@@ -12,9 +12,9 @@ const prepareData = (state) => {
     return data;
 };
 
-const dr = [-1, +1, 0, 0];
-const dc = [0, 0, +1, -1];
 const getNeighbours = (s, data, queue, prevNodes, nodesVisited) => {
+    const dr = [-1, +1, 0, 0];
+    const dc = [0, 0, +1, -1];
     const [d, row, col] = s.split("_");
     for (let i = 0; i < 4; i++) {
         const rr = +row + dr[i];
