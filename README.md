@@ -1,4 +1,4 @@
-# Pathfinding Visualizer
+# Pathfinding Visualizer - [Live demo](https://punit-koujalgi.github.io/PathFinder/)
 
 A React-based interactive application that visualizes various pathfinding algorithms and maze generation techniques. Watch in real-time as different algorithms explore the grid to find the shortest path between a start and end point.
 
